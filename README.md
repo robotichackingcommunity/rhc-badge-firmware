@@ -72,6 +72,24 @@ The STM32U073 96-bit unique device ID (`UID_BASE = 0x1FFF6E50`) is folded to an
 
 ## Building & Flashing
 
+### SWD programming header
+
+The badge is programmed over **SWD** with an **ST-LINK**. The SWD pads are on the
+**back of the badge, on the left side of the body**, in a single vertical column.
+From **top to bottom**:
+
+| Order (top → bottom) | Signal  |
+|----------------------|---------|
+| 1                    | `GND`   |
+| 2                    | `SWCLK` |
+| 3                    | `SWDIO` |
+| 4                    | `+3V`   |
+
+Wire these to the matching pins on an ST-LINK (V2/V3), then flash with the Arduino
+IDE, `arduino-cli`, or STM32CubeProgrammer.
+
+### Building from source
+
 1. Install the **Arduino IDE** (or `arduino-cli`) with the **STM32 core**
    (STM32duino).
 2. Select the board: **Generic STM32U0 series**, variant **`GENERIC_U073CBTX`**.
