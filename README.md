@@ -245,8 +245,8 @@ Notes:
 
 > ⚠️ **Spoilers:** a full solution walkthrough — including the maze rule, the
 > `image peek` OOB key leak, and the RSA break — lives in
-> [`writeup/`](writeup/ROBOTHACK_AI_CTF_Badge_Write-up.md), with runnable solver
-> scripts and a firmware dump under [`writeup/solve/`](writeup/solve/).
+> [`writeup/`](writeup/), with runnable solver scripts and a firmware dump under
+> [`writeup/solve/`](writeup/solve/).
 
 ---
 

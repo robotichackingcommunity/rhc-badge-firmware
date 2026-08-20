@@ -269,6 +269,26 @@ m3mdump.py  ──dump──▶  flash_dump.bin  ──reverse──▶  constan
 solve_exploit.py  ──OOB leak key + break RSA──▶  solve <n> <b>  ──▶  Flag
 ```
 
+**Requirements**
+
+```bash
+pip install pyserial sympy
+```
+
+The badge must be in **AI Interactive** mode (top menu item, press B3); the firmware only services serial commands there.
+
+**Quick start**
+
+```bash
+# 1) Dump the firmware (optional — flash_dump.bin is already included)
+python solve/m3mdump.py                  # → flash_dump.bin
+
+# 2) One-shot boss solver
+python solve/solve_exploit.py            # auto-detect serial port
+python solve/solve_exploit.py --port COM16
+python solve/solve_exploit.py --uibuf 0x20000A24   # &uiBuffer for the flashed build (see .map)
+```
+
 ### 🧰 `solve/m3mdump.py` — firmware memory dumper
 
 Uses the hidden `m3mdump` serial command unlocked by Flag 01 to read MCU memory over UART and save it to a `.bin`.
