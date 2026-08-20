@@ -243,6 +243,11 @@ Notes:
 > surfaces, including flash-alias folding so the same bytes can't be read via a
 > mirror address.
 
+> ⚠️ **Spoilers:** a full solution walkthrough — including the maze rule, the
+> `image peek` OOB key leak, and the RSA break — lives in
+> [`writeup/`](writeup/ROBOTHACK_AI_CTF_Badge_Write-up.md), with runnable solver
+> scripts and a firmware dump under [`writeup/solve/`](writeup/solve/).
+
 ---
 
 ## Power management
@@ -304,3 +309,4 @@ STM32_Programmer_CLI -c port=SWD mode=HOTPLUG -ob RDP=0xAA
 | `rhc_badge/demo_path.h`                             | Demo path for the Hard-challenge game               |
 | `rhc_badge.ino.bin`                                 | Prebuilt image of the initial release (flash @ `0x08000000`) |
 | `image/rhc-badge-front.jpg`, `rhc-badge-back.jpg`   | Badge photos shown in this README                   |
+| `writeup/`                                          | CTF solution walkthrough (write-up, slides, solvers) — **spoilers** |
