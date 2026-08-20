@@ -310,3 +310,9 @@ STM32_Programmer_CLI -c port=SWD mode=HOTPLUG -ob RDP=0xAA
 | `rhc_badge.ino.bin`                                 | Prebuilt image of the initial release (flash @ `0x08000000`) |
 | `image/rhc-badge-front.jpg`, `rhc-badge-back.jpg`   | Badge photos shown in this README                   |
 | `writeup/`                                          | CTF solution walkthrough (write-up, slides, solvers) — **spoilers** |
+
+---
+
+## License
+
+MIT — see [`LICENSE`](LICENSE).
