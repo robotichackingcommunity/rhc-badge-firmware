@@ -22,13 +22,13 @@ link using a line-based JSON protocol.
 
 - [Hardware](#hardware)
 - [Building & Flashing](#building--flashing)
-- [Patching Adafruit NeoPixel](#patching-adafruit-neopixel-ws2812b-first-pixel-fix)
+  - [Unlocking RDP (Readout Protection)](#unlocking-rdp-readout-protection)
+  - [Patching Adafruit NeoPixel](#patching-adafruit-neopixel-ws2812b-first-pixel-fix)
 - [Features](#features)
 - [Menu & Buttons](#menu--buttons)
 - [AI Interactive Mode (serial protocol)](#ai-interactive-mode-serial-protocol)
 - [CTF Challenges](#ctf-challenges)
 - [Power management](#power-management)
-- [Unlocking RDP (Readout Protection)](#unlocking-rdp-readout-protection)
 - [Source layout](#source-layout)
 
 ---
@@ -87,6 +87,40 @@ From **top to bottom**:
 
 Wire these to the matching pins on an ST-LINK (V2/V3), then flash with the Arduino
 IDE, `arduino-cli`, or STM32CubeProgrammer.
+
+### Unlocking RDP (Readout Protection)
+
+The badge MCU ships with **RDP Level 1** enabled and password-protected, so once
+the ST-LINK is wired up you must **unlock it before you can flash**. Use
+STMicroelectronics' **STM32CubeProgrammer CLI** (`STM32_Programmer_CLI`) with the
+RDP password below.
+
+**RDP unlock password:**
+
+```
+0x52484320 0x56316330 0x6E33204C 0x34385237
+```
+
+**Unlock procedure** — run the following commands in order (STM32CubeProgrammer
+over SWD):
+
+```sh
+# 1. Provide the RDP password on access port 0 (locks/authenticates AP0)
+STM32_Programmer_CLI -c port=SWD mode=HOTPLUG ap=0 -lockRDP1 0x52484320 0x56316330 0x6E33204C 0x34385237
+
+# 2. Set RDP to level 1 (0xBB) — regression/handshake step
+STM32_Programmer_CLI -c port=SWD mode=HOTPLUG -ob RDP=0xBB
+
+# 3. Provide the password on access port 1 to unlock RDP
+STM32_Programmer_CLI -c port=SWD mode=HOTPLUG ap=1 -unlockRDP1 0x52484320 0x56316330 0x6E33204C 0x34385237
+
+# 4. Drop RDP back to level 0 (0xAA) — full read/write access restored
+STM32_Programmer_CLI -c port=SWD mode=HOTPLUG -ob RDP=0xAA
+```
+
+> ⚠️ **Warning:** Regressing RDP from Level 1 to Level 0 (`RDP=0xAA`) triggers a
+> **full mass erase** of the flash. Back up anything you need before unlocking, and
+> re-flash the firmware afterwards.
 
 ### Building from source
 
@@ -275,42 +309,6 @@ inactivity the badge enters a standby screen and sleeps the panel; the next butt
 press wakes and redraws it. Eye LEDs stay off in standby, keeping coin-cell drain
 low. IR interaction (default on) keeps the CPU running so incoming NEC frames can
 be decoded.
-
----
-
-## Unlocking RDP (Readout Protection)
-
-The badge MCU ships with **RDP Level 1** enabled and password-protected. To read
-back or reprogram the device, use STMicroelectronics' **STM32CubeProgrammer CLI**
-(`STM32_Programmer_CLI`) with the RDP password below.
-
-### RDP unlock password
-
-```
-0x52484320 0x56316330 0x6E33204C 0x34385237
-```
-
-### Unlock procedure
-
-Run the following commands in order (STM32CubeProgrammer over SWD):
-
-```sh
-# 1. Provide the RDP password on access port 0 (locks/authenticates AP0)
-STM32_Programmer_CLI -c port=SWD mode=HOTPLUG ap=0 -lockRDP1 0x52484320 0x56316330 0x6E33204C 0x34385237
-
-# 2. Set RDP to level 1 (0xBB) — regression/handshake step
-STM32_Programmer_CLI -c port=SWD mode=HOTPLUG -ob RDP=0xBB
-
-# 3. Provide the password on access port 1 to unlock RDP
-STM32_Programmer_CLI -c port=SWD mode=HOTPLUG ap=1 -unlockRDP1 0x52484320 0x56316330 0x6E33204C 0x34385237
-
-# 4. Drop RDP back to level 0 (0xAA) — full read/write access restored
-STM32_Programmer_CLI -c port=SWD mode=HOTPLUG -ob RDP=0xAA
-```
-
-> ⚠️ **Warning:** Regressing RDP from Level 1 to Level 0 (`RDP=0xAA`) triggers a
-> **full mass erase** of the flash. Back up anything you need before unlocking, and
-> re-flash the firmware afterwards.
 
 ---
 
